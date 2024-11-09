@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.challengetoothfairymobile.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login" />
+
+    <fragment
+        android:id="@+id/cadastroFragment"
+        android:name="com.example.challengetoothfairymobile.CadastroFragment"
+        android:label="Cadastro"
+        tools:layout="@layout/fragment_cadastro" />
+
+    <fragment
+        android:id="@+id/perfilClienteFragment"
+        android:name="com.example.challengetoothfairymobile.PerfilClienteFragment"
+        android:label="Perfil Cliente"
+        tools:layout="@layout/fragment_perfil_cliente" />
+
+    <fragment
+        android:id="@+id/perfilCarteirinhaFragment"
+        android:name="com.example.challengetoothfairymobile.PerfilCarteirinhaFragment"
+        android:label="Perfil Carteirinha"
+        tools:layout="@layout/fragment_perfil_carteirinha" />
+
+    <fragment
+        android:id="@+id/quizFragment"
+        android:name="com.example.challengetoothfairymobile.QuizFragment"
+        android:label="Quiz"
+        tools:layout="@layout/fragment_quiz" />
+
+    <action
+        android:id="@+id/action_loginFragment_to_cadastroFragment"
+        app:destination="@id/cadastroFragment" />
+
+    <action
+        android:id="@+id/action_loginFragment_to_perfilClienteFragment"
+        app:destination="@id/perfilClienteFragment" />
+
+    <action
+        android:id="@+id/action_cadastroFragment_to_perfilClienteFragment"
+        app:destination="@id/perfilClienteFragment" />
+
+    <action
+        android:id="@+id/action_perfilClienteFragment_to_perfilCarteirinhaFragment"
+        app:destination="@id/perfilCarteirinhaFragment" />
+
+    <action
+        android:id="@+id/action_perfilClienteFragment_to_quizFragment"
+        app:destination="@id/quizFragment" />
+
+    <action
+        android:id="@+id/action_perfilCarteirinhaFragment_to_perfilClienteFragment"
+        app:destination="@id/perfilClienteFragment" />
+
+    <action
+        android:id="@+id/action_quizFragment_to_perfilClienteFragment"
+        app:destination="@id/perfilClienteFragment" />
+
+</navigation>
