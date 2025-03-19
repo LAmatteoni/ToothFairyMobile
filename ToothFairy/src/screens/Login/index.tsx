@@ -1,0 +1,75 @@
+import React, { useState } from 'react';
+import styled from 'styled-components/native';
+import CustomInput from '../../components/CustomInput';
+import DynamicTopLeftImage from '../../components/DynamicTopLeftImage';
+import CustomButton from '../../components/CustomButton';
+
+const Login = ({ navigation }: any) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  return (
+    <Container>
+      <DynamicTopLeftImage isLogo={true}/>
+      <WelcomeText>Bem-vindo(a) de volta!</WelcomeText>
+      <Image source={require('./../../assets/man_woman_hands.png')}/>
+      <InstructionText>Entre com sua conta para continuar!</InstructionText>
+      
+      <InputContainer>
+        <CustomInput
+          type="email"
+          placeholder="Login"
+          onChangeText={setEmail}
+          value={email}
+        />
+        <CustomInput
+          type="password"
+          placeholder="Senha"
+          onChangeText={setPassword}
+          value={password}
+        />
+      </InputContainer>
+      
+      <CustomButton title="Continuar" onPress={() => navigation.navigate('Escolha')} />
+    </Container>
+  );
+};
+
+const Container = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 30px;
+  background-color: #0066ff;
+`;
+
+const WelcomeText = styled.Text`
+  font-size: 48px;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: white;
+`;
+
+const Image = styled.Image`
+  width: 100%;
+  height: 150px;
+  resize-mode: contain;
+  margin-bottom: 30px;
+`;
+
+const InstructionText = styled.Text`
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  color: white;
+`;
+
+const InputContainer = styled.View`
+  width: 100%;
+  margin-bottom: 10px;
+  gap: 10px;
+`;
+
+export default Login;
