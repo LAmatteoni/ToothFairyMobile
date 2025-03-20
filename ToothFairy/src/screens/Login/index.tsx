@@ -10,8 +10,6 @@ const Login = ({ navigation }: any) => {
   const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
 
-  const isFormValid = email.trim() !== '' || password.trim() !== '';
-
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);

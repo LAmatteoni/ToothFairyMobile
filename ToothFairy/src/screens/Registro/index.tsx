@@ -17,16 +17,6 @@ const Registro = ({ navigation }: any) => {
     return regex.test(email);
   };
 
-  const isFormValid = () => {
-    return (
-      nome.trim() !== '' &&
-      email.trim() !== '' &&
-      validateEmail(email) &&
-      senha.trim() !== '' &&
-      confirmacaoSenha.trim() !== ''
-    );
-  };
-
   const handleSubmit = () => {
     if (nome.trim() === '') {
       Alert.alert('Erro', 'Por favor, preencha o campo Nome.');
@@ -100,10 +90,12 @@ const Registro = ({ navigation }: any) => {
           onChangeText={setConfirmacaoSenha}
         />
 
-        <CustomButton
-          title="Registrar"
-          onPress={handleSubmit}
-        />
+        <ButtonConainer>  
+          <CustomButton
+            title="Registrar"
+            onPress={handleSubmit}
+          />
+        </ButtonConainer>
       </InputContainer>
     </Container>
   );
@@ -112,7 +104,7 @@ const Registro = ({ navigation }: any) => {
 const Container = styled.View`
   flex: 1;
   justify-content: center;
-  padding: 20px;
+  padding: 30px;
   background-color: #0066ff;
 `;
 
@@ -141,6 +133,10 @@ const AccountInfoText = styled.Text`
 const InputContainer = styled.View`
   width: 100%;
   gap: 20px;
+`;
+
+const ButtonConainer = styled.View`
+  align-items: center;
 `;
 
 export default Registro;
