@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import CustomInput from '../../components/CustomInput';
 import DynamicTopLeftImage from '../../components/DynamicTopLeftImage';
 import CustomButton from '../../components/CustomButton';
-import { Alert } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
 
 const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
@@ -35,35 +35,40 @@ const Login = ({ navigation }: any) => {
   };
 
   return (
-    <Container>
-      <DynamicTopLeftImage isLogo={true}/>
-      <WelcomeText>Bem-vindo(a) de volta!</WelcomeText>
-      <Image source={require('./../../assets/man_woman_hands.png')}/>
-      <InstructionText>Entre com sua conta para continuar!</InstructionText>
-      
-      <InputContainer>
-        <CustomInput
-          type="email"
-          placeholder="Login"
-          onChangeText={setEmail}
-          value={email}
-          invalid={!isEmailValid}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+    >
+      <Container>
+        <DynamicTopLeftImage isLogo={true}/>
+        <WelcomeText>Bem-vindo(a) de volta!</WelcomeText>
+        <Image source={require('./../../assets/man_woman_hands.png')}/>
+        <InstructionText>Entre com sua conta para continuar!</InstructionText>
+        
+        <InputContainer>
+          <CustomInput
+            type="email"
+            placeholder="Login"
+            onChangeText={setEmail}
+            value={email}
+            invalid={!isEmailValid}
+          />
+          <CustomInput
+            type="password"
+            placeholder="Senha"
+            onChangeText={setPassword}
+            value={password}
+          />
+        </InputContainer>
+    
+        <RegisterText>É novo por aqui? Clique <Bold onPress={() => navigation.navigate('Registro')}>AQUI</Bold> para criar uma nova conta</RegisterText>      
+        
+        <CustomButton 
+          title="Continuar" 
+          onPress={handleSubmit}
         />
-        <CustomInput
-          type="password"
-          placeholder="Senha"
-          onChangeText={setPassword}
-          value={password}
-        />
-      </InputContainer>
-
-      <RegisterText>É novo por aqui? Clique <Bold onPress={() => navigation.navigate('Registro')}>AQUI</Bold> para criar uma nova conta</RegisterText>      
-      
-      <CustomButton 
-        title="Continuar" 
-        onPress={handleSubmit}
-      />
-    </Container>
+      </Container>
+    </KeyboardAvoidingView>
   );
 };
 

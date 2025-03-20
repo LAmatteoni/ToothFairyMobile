@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import DynamicTopLeftImage from '../../components/DynamicTopLeftImage';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
@@ -54,50 +54,55 @@ const Registro = ({ navigation }: any) => {
   };
 
   return (
-    <Container>
-      <DynamicTopLeftImage isLogo={false} />
-      <RegisterText>Cadastre-se</RegisterText>
-      <Image source={require('./../../assets/choice-user-profile.png')} />
-      <AccountInfoText>Informações da conta</AccountInfoText>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+    >
+      <Container>
+        <DynamicTopLeftImage isLogo={false} />
+        <RegisterText>Cadastre-se</RegisterText>
+        <Image source={require('./../../assets/choice-user-profile.png')} />
+        <AccountInfoText>Informações da conta</AccountInfoText>
 
-      <InputContainer>
-        <CustomInput
-          type="text"
-          placeholder="Nome completo"
-          value={nome}
-          onChangeText={setNome}
-        />
-        <CustomInput
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChangeText={(text: any) => {
-            setEmail(text);
-            setIsEmailValid(validateEmail(text));
-          }}
-          invalid={!isEmailValid}
-        />
-        <CustomInput
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          onChangeText={setSenha}
-        />
-        <CustomInput
-          type="password"
-          placeholder="Confirmação de senha"
-          value={confirmacaoSenha}
-          onChangeText={setConfirmacaoSenha}
-        />
-
-        <ButtonConainer>  
-          <CustomButton
-            title="Registrar"
-            onPress={handleSubmit}
+        <InputContainer>
+          <CustomInput
+            type="text"
+            placeholder="Nome completo"
+            value={nome}
+            onChangeText={setNome}
           />
-        </ButtonConainer>
-      </InputContainer>
-    </Container>
+          <CustomInput
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChangeText={(text: any) => {
+              setEmail(text);
+              setIsEmailValid(validateEmail(text));
+            }}
+            invalid={!isEmailValid}
+          />
+          <CustomInput
+            type="password"
+            placeholder="Senha"
+            value={senha}
+            onChangeText={setSenha}
+          />
+          <CustomInput
+            type="password"
+            placeholder="Confirmação de senha"
+            value={confirmacaoSenha}
+            onChangeText={setConfirmacaoSenha}
+          />
+
+          <ButtonConainer>  
+            <CustomButton
+              title="Registrar"
+              onPress={handleSubmit}
+            />
+          </ButtonConainer>
+        </InputContainer>
+      </Container>
+    </KeyboardAvoidingView>
   );
 };
 
