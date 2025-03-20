@@ -8,6 +8,8 @@ const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const isFormValid = email.trim() !== '' && password.trim() !== '';
+
   return (
     <Container>
       <DynamicTopLeftImage isLogo={true}/>
@@ -29,8 +31,14 @@ const Login = ({ navigation }: any) => {
           value={password}
         />
       </InputContainer>
+
+      <RegisterText>É novo por aqui? Clique <Bold onPress={() => navigation.navigate('Registro')}>AQUI</Bold> para criar uma nova conta</RegisterText>      
       
-      <CustomButton title="Continuar" onPress={() => navigation.navigate('Escolha')} />
+      <CustomButton 
+        title="Continuar" 
+        onPress={() => navigation.navigate('Escolha')} 
+        disabled={!isFormValid}
+      />
     </Container>
   );
 };
@@ -61,15 +69,28 @@ const Image = styled.Image`
 
 const InstructionText = styled.Text`
   font-size: 18px;
-  font-weight: 500;
-  margin-bottom: 24px;
+  font-weight: 400;
+  margin-bottom: 16px;
   color: white;
 `;
 
 const InputContainer = styled.View`
   width: 100%;
-  margin-bottom: 10px;
-  gap: 10px;
+  gap: 30px;
+`;
+
+const RegisterText = styled.Text`
+  max-width: 250px;
+  font-size: 16px;
+  text-align: center;
+  font-weight: 400;
+  margin-bottom: 30px;
+  color: white;
+`;
+
+const Bold = styled.Text`
+  font-weight: 700;
+  color: white;
 `;
 
 export default Login;

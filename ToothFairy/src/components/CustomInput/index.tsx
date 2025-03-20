@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components/native';
-import { Image, TextInput } from 'react-native';
+import { Image, TextInput, TouchableWithoutFeedback } from 'react-native';
 
 const CustomInput = ({ type, placeholder, onChangeText, value }: any) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -20,28 +20,28 @@ const CustomInput = ({ type, placeholder, onChangeText, value }: any) => {
 
   return (
     <InputContainer>
-      <StyledTextInput>
-          <IconContainer onPress={() => setShowPassword(!showPassword)}>
-            <Image
-              source={type === 'email' ? require('./../../assets/login.png') : require('./../../assets/password.png')}
-            />
-          </IconContainer>
-        <TextInput
+      <TextInputView>
+        <IconContainer pointerEvents="none">
+          <Image
+            source={type === 'email' ? require('./../../assets/login.png') : require('./../../assets/password.png')}
+          />
+        </IconContainer>
+        <StyledTextInput
           placeholder={placeholder}
-          placeholderTextColor="black"
+          placeholderTextColor="#242424"
           onChangeText={handleEmailChange}
           value={value}
           secureTextEntry={type === 'password' && !showPassword}
           keyboardType={type === 'email' ? 'email-address' : 'default'}
           invalid={type === 'email' && !isEmailValid}
         />
-      </StyledTextInput>
+      </TextInputView>
       {type === 'password' && (
-        <IconContainer onPress={() => setShowPassword(!showPassword)}>
-          <Image
+        <IconPassword onPress={() => setShowPassword(!showPassword)}>
+          <EyeIcon
             source={showPassword ? require('./../../assets/visible-eye.png') : require('./../../assets/invisible-eye.png')}
           />
-        </IconContainer>
+        </IconPassword>
       )}
       {type === 'email' && !isEmailValid && (
         <ErrorText>Email inválido</ErrorText>
@@ -51,32 +51,47 @@ const CustomInput = ({ type, placeholder, onChangeText, value }: any) => {
 };
 
 const InputContainer = styled.View`
-  margin-bottom: 20px;
   width: 100%;
   height: 40px;
   border-color: ${props => props.invalid ? 'red' : 'gray'};
-  background-color: white;
   border-width: 1px;
-  padding: 0 10px;
   border-radius: 10px;
+  background-color: white;
+  padding: 0 10px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 `;
 
-const StyledTextInput = styled.View`
+const TextInputView = styled.View`
   flex-direction: row;
   align-items: center;
   gap: 5px;
+  flex: 1;
 `;
 
-const IconContainer = styled.TouchableOpacity`
+const StyledTextInput = styled.TextInput`
+  flex: 1;
+  margin-right: -10px;
+  margin-left: -30px;
+  padding-left: 35px;
+  height: 40px;
+`;
+
+const IconContainer = styled.View`
+`;
+
+const IconPassword = styled.TouchableOpacity`
+  padding: 10px;
+  margin: -10px -10px -10px 0;
+`;
+
+const EyeIcon = styled.Image`
 `;
 
 const ErrorText = styled.Text`
   color: red;
   font-size: 12px;
-  margin-top: 5px;
 `;
 
 export default CustomInput;
