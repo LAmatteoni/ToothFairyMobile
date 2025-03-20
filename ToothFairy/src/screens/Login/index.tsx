@@ -3,12 +3,33 @@ import styled from 'styled-components/native';
 import CustomInput from '../../components/CustomInput';
 import DynamicTopLeftImage from '../../components/DynamicTopLeftImage';
 import CustomButton from '../../components/CustomButton';
+import { Alert } from 'react-native';
 
 const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isEmailValid, setIsEmailValid] = useState(true);
 
   const isFormValid = email.trim() !== '' && password.trim() !== '';
+
+  const validateEmail = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const handleSubmit = () => {
+    if (!validateEmail(email)) {
+      Alert.alert('Erro', 'Email inválido.');
+      return;
+    }
+
+    Alert.alert('Sucesso', 'Login realizado com sucesso!');
+    
+    navigation.navigate('Escolha');
+    
+    setEmail('');
+    setPassword('');
+  };
 
   return (
     <Container>
@@ -23,6 +44,7 @@ const Login = ({ navigation }: any) => {
           placeholder="Login"
           onChangeText={setEmail}
           value={email}
+          invalid={!isEmailValid}
         />
         <CustomInput
           type="password"
@@ -36,7 +58,7 @@ const Login = ({ navigation }: any) => {
       
       <CustomButton 
         title="Continuar" 
-        onPress={() => navigation.navigate('Escolha')} 
+        onPress={handleSubmit} 
         disabled={!isFormValid}
       />
     </Container>
