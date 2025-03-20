@@ -10,7 +10,7 @@ const Login = ({ navigation }: any) => {
   const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
 
-  const isFormValid = email.trim() !== '' && password.trim() !== '';
+  const isFormValid = email.trim() !== '' || password.trim() !== '';
 
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -20,6 +20,11 @@ const Login = ({ navigation }: any) => {
   const handleSubmit = () => {
     if (!validateEmail(email)) {
       Alert.alert('Erro', 'Email inválido.');
+      return;
+    }
+
+    if (password.trim() === '') {
+      Alert.alert('Erro', 'Por favor, preencha o campo Senha.');
       return;
     }
 
@@ -58,8 +63,7 @@ const Login = ({ navigation }: any) => {
       
       <CustomButton 
         title="Continuar" 
-        onPress={handleSubmit} 
-        disabled={!isFormValid}
+        onPress={handleSubmit}
       />
     </Container>
   );

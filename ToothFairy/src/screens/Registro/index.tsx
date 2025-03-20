@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Alert } from 'react-native';
+import DynamicTopLeftImage from '../../components/DynamicTopLeftImage';
 import CustomInput from '../../components/CustomInput';
+import CustomButton from '../../components/CustomButton';
 import styled from 'styled-components/native';
 
 const Registro = ({ navigation }: any) => {
@@ -8,12 +10,49 @@ const Registro = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmacaoSenha, setConfirmacaoSenha] = useState('');
+  const [isEmailValid, setIsEmailValid] = useState(true);
+
+  const validateEmail = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const isFormValid = () => {
+    return (
+      nome.trim() !== '' &&
+      email.trim() !== '' &&
+      validateEmail(email) &&
+      senha.trim() !== '' &&
+      confirmacaoSenha.trim() !== ''
+    );
+  };
 
   const handleSubmit = () => {
+    if (nome.trim() === '') {
+      Alert.alert('Erro', 'Por favor, preencha o campo Nome.');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Alert.alert('Erro', 'Por favor, insira um email válido.');
+      return;
+    }
+
+    if (senha.trim() === '') {
+      Alert.alert('Erro', 'Por favor, preencha o campo Senha.');
+      return;
+    }
+
+    if (confirmacaoSenha.trim() === '') {
+      Alert.alert('Erro', 'Por favor, preencha o campo Confirmação de Senha.');
+      return;
+    }
+
     if (senha !== confirmacaoSenha) {
       Alert.alert('Erro', 'As senhas não coincidem.');
       return;
     }
+
     Alert.alert('Sucesso', 'Registro realizado com sucesso!');
     
     navigation.navigate('Escolha');
@@ -24,58 +63,48 @@ const Registro = ({ navigation }: any) => {
     setConfirmacaoSenha('');
   };
 
-  const handleCancel = () => {
-    navigation.navigate('Login');
-  };
-
   return (
     <Container>
-      <Title>Registro</Title>
+      <DynamicTopLeftImage isLogo={false} />
+      <RegisterText>Cadastre-se</RegisterText>
+      <Image source={require('./../../assets/choice-user-profile.png')} />
+      <AccountInfoText>Informações da conta</AccountInfoText>
 
       <InputContainer>
         <CustomInput
+          type="text"
+          placeholder="Nome completo"
+          value={nome}
+          onChangeText={setNome}
+        />
+        <CustomInput
           type="email"
-          placeholder="Login"
-          onChangeText={setEmail}
+          placeholder="Email"
           value={email}
+          onChangeText={(text: any) => {
+            setEmail(text);
+            setIsEmailValid(validateEmail(text));
+          }}
+          invalid={!isEmailValid}
         />
         <CustomInput
           type="password"
           placeholder="Senha"
-          onChangeText={setSenha}
           value={senha}
+          onChangeText={setSenha}
+        />
+        <CustomInput
+          type="password"
+          placeholder="Confirmação de senha"
+          value={confirmacaoSenha}
+          onChangeText={setConfirmacaoSenha}
+        />
+
+        <CustomButton
+          title="Registrar"
+          onPress={handleSubmit}
         />
       </InputContainer>
-
-      <Input
-        placeholder="Nome completo"
-        value={nome}
-        onChangeText={setNome}
-        required
-      />
-      <Input
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        required
-      />
-      <Input
-        placeholder="Senha"
-        value={senha}
-        onChangeText={setSenha}
-        secureTextEntry
-        required
-      />
-      <Input
-        placeholder="Confirmação de senha"
-        value={confirmacaoSenha}
-        onChangeText={setConfirmacaoSenha}
-        secureTextEntry
-        required
-      />
-      <Button title="Registrar" onPress={handleSubmit} />
-      <CancelButton title="Cancelar" onPress={handleCancel} />
     </Container>
   );
 };
@@ -87,33 +116,31 @@ const Container = styled.View`
   background-color: #0066ff;
 `;
 
-const Title = styled.Text`
-  font-size: 24px;
+const RegisterText = styled.Text`
+  font-size: 48px;
   text-align: center;
-  margin-bottom: 20px;
-  color: #333;
+  font-weight: 700;
+  margin-bottom: 56px;
+  color: white;
+`;
+
+const Image = styled.Image`
+  width: 100%;
+  height: 150px;
+  resize-mode: contain;
+  margin-bottom: 56px;
+`;
+
+const AccountInfoText = styled.Text`
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: white;
 `;
 
 const InputContainer = styled.View`
   width: 100%;
-  gap: 30px;
-`;
-
-const Input = styled.TextInput`
-  height: 40px;
-  border-color: #ccc;
-  border-width: 1px;
-  border-radius: 4px;
-  margin-bottom: 15px;
-  padding-horizontal: 10px;
-`;
-
-const Button = styled.Button`
-  margin-top: 10px;
-`;
-
-const CancelButton = styled.Button`
-  margin-top: 10px;
+  gap: 20px;
 `;
 
 export default Registro;
