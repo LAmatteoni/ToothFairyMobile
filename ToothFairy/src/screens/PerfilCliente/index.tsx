@@ -18,8 +18,9 @@ const PerfilCliente = ({ navigation }: any) => {
                 onPress={() => navigation.navigate('PlanoCliente')}
             />
             <CustomButton 
-                title="Veja dentistas disponíveis"
+                title="Quiz"
                 clientProfile={true}
+                onPress={() => navigation.navigate('Quiz')}
             />
         </ButtonContainer>
     </Container>

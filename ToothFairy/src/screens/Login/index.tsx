@@ -52,12 +52,14 @@ const Login = ({ navigation }: any) => {
             onChangeText={setEmail}
             value={email}
             invalid={!isEmailValid}
+            iconSource={require('./../../assets/login.png')}
           />
           <CustomInput
             type="password"
             placeholder="Senha"
             onChangeText={setPassword}
             value={password}
+            iconSource={require('./../../assets/password.png')}
           />
         </InputContainer>
     

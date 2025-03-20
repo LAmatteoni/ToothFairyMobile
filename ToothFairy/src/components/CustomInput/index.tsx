@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components/native';
-import { Image, TextInput, TouchableWithoutFeedback } from 'react-native';
+import { Image } from 'react-native';
 
-const CustomInput = ({ type, placeholder, onChangeText, value }: any) => {
+const CustomInput = ({ type, placeholder, onChangeText, value, iconSource, multiline }: any) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(true);
 
@@ -21,19 +21,21 @@ const CustomInput = ({ type, placeholder, onChangeText, value }: any) => {
   return (
     <InputContainer>
       <TextInputView>
-        <IconContainer pointerEvents="none">
-          <Image
-            source={type === 'email' ? require('./../../assets/login.png') : require('./../../assets/password.png')}
-          />
-        </IconContainer>
+        {iconSource && (
+          <IconContainer pointerEvents="none">
+            <Image source={iconSource} />
+          </IconContainer>
+        )}
         <StyledTextInput
           placeholder={placeholder}
-          placeholderTextColor="#242424"
+          placeholderTextColor="#585858"
           onChangeText={handleEmailChange}
           value={value}
           secureTextEntry={type === 'password' && !showPassword}
           keyboardType={type === 'email' ? 'email-address' : 'default'}
           invalid={type === 'email' && !isEmailValid}
+          multiline={multiline}
+          numberOfLines={multiline ? 4 : 1}
         />
       </TextInputView>
       {type === 'password' && (
@@ -52,7 +54,7 @@ const CustomInput = ({ type, placeholder, onChangeText, value }: any) => {
 
 const InputContainer = styled.View`
   width: 100%;
-  height: 40px;
+  min-height: 40px;
   border-color: ${props => props.invalid ? 'red' : 'gray'};
   border-width: 1px;
   border-radius: 10px;
@@ -68,14 +70,15 @@ const TextInputView = styled.View`
   align-items: center;
   gap: 5px;
   flex: 1;
+  padding-bottom: ${props => props.multiline ? '0' : '5px'};
 `;
 
 const StyledTextInput = styled.TextInput`
   flex: 1;
-  margin-right: -10px;
-  margin-left: -30px;
-  padding-left: 35px;
-  height: 40px;
+  margin-right: ${props => props.iconSource ? '-10px' : '0px'};
+  margin-left: ${props => props.iconSource ? '-30px' : '0px'};
+  padding-left: ${props => props.iconSource ? '35px' : '0px'};
+  height: auto;
 `;
 
 const IconContainer = styled.View`

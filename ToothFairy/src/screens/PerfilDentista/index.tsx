@@ -98,7 +98,7 @@ const DownPatients = styled.View`
 
 const PatientsText = styled.Text`
     font-size: 24px;
-    font-weight: 600;
+    font-weight: 700;
     color: #FF6052;
 `;
 

@@ -142,6 +142,7 @@ const InputContainer = styled.View`
 
 const ButtonConainer = styled.View`
   align-items: center;
+  margin-top: 10px;
 `;
 
 export default Registro;

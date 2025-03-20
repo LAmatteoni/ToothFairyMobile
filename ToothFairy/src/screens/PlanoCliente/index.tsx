@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import CustomButton from '../../components/CustomButton';
 import DynamicTopLeftImage from '../../components/DynamicTopLeftImage';
 
-const PlanoCliente = ({ navigation }: any) => {
+const PlanoCliente = () => {
   return (
     <Container>
         <DynamicTopLeftImage isLogo={false} />
@@ -14,11 +13,6 @@ const PlanoCliente = ({ navigation }: any) => {
 
         <BottomContainer>
             <Carteirinha source={require('./../../assets/carteirinha.png')} />
-
-            <CustomButton 
-                title="Quiz"
-                onPress={() => navigation.navigate('Quiz')}
-            />
         </BottomContainer>
     </Container>
   );
