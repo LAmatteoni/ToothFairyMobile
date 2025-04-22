@@ -4,6 +4,8 @@ import DynamicTopLeftImage from '../../components/DynamicTopLeftImage';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import styled from 'styled-components/native';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebaseConfig"
 
 const Registro = ({ navigation }: any) => {
   const [nome, setNome] = useState('');
@@ -18,6 +20,18 @@ const Registro = ({ navigation }: any) => {
   };
 
   const handleSubmit = () => {
+
+    createUserWithEmailAndPassword(auth, email, senha)
+      .then(() => {
+        Alert.alert("Sucesso", "Usuário registrado!");
+        navigation.navigate("Escolha");
+      })
+      .catch((error) => {
+        console.log(error);
+        Alert.alert("Erro", error.message);
+      });
+
+
     if (nome.trim() === '') {
       Alert.alert('Erro', 'Por favor, preencha o campo Nome.');
       return;

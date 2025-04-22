@@ -4,6 +4,8 @@ import CustomInput from '../../components/CustomInput';
 import DynamicTopLeftImage from '../../components/DynamicTopLeftImage';
 import CustomButton from '../../components/CustomButton';
 import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebaseConfig";
 
 const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
@@ -16,6 +18,18 @@ const Login = ({ navigation }: any) => {
   };
 
   const handleSubmit = () => {
+    
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        Alert.alert("Sucesso", "Login realizado!");
+        navigation.navigate("Escolha");
+      })
+      .catch((error) => {
+        console.log(error);
+        Alert.alert("Erro", error.message);
+      });
+
+
     if (!validateEmail(email)) {
       Alert.alert('Erro', 'Email inválido.');
       return;
