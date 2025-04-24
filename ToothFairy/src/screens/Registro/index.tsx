@@ -5,7 +5,8 @@ import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import styled from 'styled-components/native';
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebaseConfig"
+import { auth } from "../../../firebaseConfig"
+
 
 const Registro = ({ navigation }: any) => {
   const [nome, setNome] = useState('');
@@ -27,42 +28,26 @@ const Registro = ({ navigation }: any) => {
         navigation.navigate("Escolha");
       })
       .catch((error) => {
-        console.log(error);
-        Alert.alert("Erro", error.message);
+        if (nome.trim() === '') {
+          Alert.alert('Erro', 'Por favor, preencha o campo Nome.');
+          return;
+        } else if (!validateEmail(email)) {
+          Alert.alert('Erro', 'Por favor, insira um email válido.');
+          return;
+        } else if (senha.trim() === '') {
+          Alert.alert('Erro', 'Por favor, preencha o campo Senha.');
+          return;
+        } else if (confirmacaoSenha.trim() === '') {
+          Alert.alert('Erro', 'Por favor, preencha o campo Confirmação de Senha.');
+          return;
+        } else if (senha !== confirmacaoSenha) {
+          Alert.alert('Erro', 'As senhas não coincidem.');
+          return;
+        } else {
+          Alert.alert("Erro", error.message);
+        }
       });
-
-
-    if (nome.trim() === '') {
-      Alert.alert('Erro', 'Por favor, preencha o campo Nome.');
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      Alert.alert('Erro', 'Por favor, insira um email válido.');
-      return;
-    }
-
-    if (senha.trim() === '') {
-      Alert.alert('Erro', 'Por favor, preencha o campo Senha.');
-      return;
-    }
-
-    if (confirmacaoSenha.trim() === '') {
-      Alert.alert('Erro', 'Por favor, preencha o campo Confirmação de Senha.');
-      return;
-    }
-
-    if (senha !== confirmacaoSenha) {
-      Alert.alert('Erro', 'As senhas não coincidem.');
-      return;
-    }
-
-    Alert.alert('Sucesso', 'Registro realizado com sucesso!');
-    
-    navigation.navigate('Escolha');
-    
-    setNome('');
-    setEmail('');
+   
     setSenha('');
     setConfirmacaoSenha('');
   };

@@ -5,7 +5,8 @@ import DynamicTopLeftImage from '../../components/DynamicTopLeftImage';
 import CustomButton from '../../components/CustomButton';
 import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebaseConfig";
+import { auth } from "../../../firebaseConfig";
+
 
 const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
@@ -18,33 +19,24 @@ const Login = ({ navigation }: any) => {
   };
 
   const handleSubmit = () => {
-    
+   
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        Alert.alert("Sucesso", "Login realizado!");
+        Alert.alert("Sucesso", "Login realizado com sucesso!");
         navigation.navigate("Escolha");
       })
       .catch((error) => {
-        console.log(error);
-        Alert.alert("Erro", error.message);
+        if (!validateEmail(email)) {
+          Alert.alert('Erro', 'Email inválido.');
+          return;
+        } else if (password.trim() === '') {
+          Alert.alert('Erro', 'Por favor, preencha o campo Senha.');
+          return;
+        } else {
+          Alert.alert("Erro", "As credenciais estão incorretas");
+        }
       });
-
-
-    if (!validateEmail(email)) {
-      Alert.alert('Erro', 'Email inválido.');
-      return;
-    }
-
-    if (password.trim() === '') {
-      Alert.alert('Erro', 'Por favor, preencha o campo Senha.');
-      return;
-    }
-
-    Alert.alert('Sucesso', 'Login realizado com sucesso!');
-    
-    navigation.navigate('Escolha');
-    
-    setEmail('');
+   
     setPassword('');
   };
 
@@ -58,7 +50,7 @@ const Login = ({ navigation }: any) => {
         <WelcomeText>Bem-vindo(a) de volta!</WelcomeText>
         <Image source={require('./../../assets/man_woman_hands.png')}/>
         <InstructionText>Entre com sua conta para continuar!</InstructionText>
-        
+       
         <InputContainer>
           <CustomInput
             type="email"
@@ -76,11 +68,11 @@ const Login = ({ navigation }: any) => {
             iconSource={require('./../../assets/password.png')}
           />
         </InputContainer>
-    
+   
         <RegisterText>É novo por aqui? Clique <Bold onPress={() => navigation.navigate('Registro')}>AQUI</Bold> para criar uma nova conta</RegisterText>      
-        
-        <CustomButton 
-          title="Continuar" 
+       
+        <CustomButton
+          title="Continuar"
           onPress={handleSubmit}
         />
       </Container>
