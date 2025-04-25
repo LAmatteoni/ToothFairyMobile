@@ -5,7 +5,8 @@ import DynamicTopLeftImage from '../../components/DynamicTopLeftImage';
 import CustomButton from '../../components/CustomButton';
 import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../firebaseConfig";
+import { auth, database } from "../../../firebaseConfig";
+import { getDatabase, ref, get } from "firebase/database";
 
 
 const Login = ({ navigation }: any) => {
@@ -19,12 +20,28 @@ const Login = ({ navigation }: any) => {
   };
 
   const handleSubmit = () => {
-   
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        Alert.alert("Sucesso", "Login realizado com sucesso!");
-        navigation.navigate("Escolha");
-      })
+    .then((userCredential) => {
+      const user = userCredential.user;
+      const dbRef = ref(database, 'users/' + user.uid);
+      
+      get(dbRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const userData = snapshot.val();
+          Alert.alert("Sucesso", "Login realizado com sucesso!");
+          
+          if (userData.userType === 'dentista') {
+            navigation.navigate("PerfilDentista");
+          } else {
+            navigation.navigate("PerfilCliente");
+          }
+        } else {
+          Alert.alert("Erro", "Dados do usuário não encontrados.");
+        }
+      }).catch((error) => {
+        Alert.alert("Erro", "Não foi possível verificar o tipo de usuário.");
+      });
+    })
       .catch((error) => {
         if (!validateEmail(email)) {
           Alert.alert('Erro', 'Email inválido.');
@@ -69,7 +86,7 @@ const Login = ({ navigation }: any) => {
           />
         </InputContainer>
    
-        <RegisterText>É novo por aqui? Clique <Bold onPress={() => navigation.navigate('Registro')}>AQUI</Bold> para criar uma nova conta</RegisterText>      
+        <RegisterText>É novo por aqui? Clique <Bold onPress={() => navigation.navigate('Escolha')}>AQUI</Bold> para criar uma nova conta</RegisterText>  
        
         <CustomButton
           title="Continuar"

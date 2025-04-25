@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Login from './src/screens/Login';
 import Registro from './src/screens/Registro';
@@ -10,7 +10,23 @@ import PerfilCliente from './src/screens/PerfilCliente';
 import PlanoCliente from './src/screens/PlanoCliente';
 import Quiz from './src/screens/Quiz';
 
-const Stack = createStackNavigator();
+export type RootStackParamList = {
+  Login: undefined;
+  Registro: { userType: 'dentista' | 'cliente' };
+  Escolha: undefined;
+  PerfilDentista: undefined;
+  PerfilCliente: undefined;
+  PlanoCliente: undefined;
+  Quiz: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
+
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}
 
 const App = () => {
   return (

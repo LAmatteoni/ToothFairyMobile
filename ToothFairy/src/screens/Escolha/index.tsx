@@ -3,22 +3,30 @@ import { Alert } from 'react-native';
 import styled from 'styled-components/native';
 import DynamicTopLeftImage from '../../components/DynamicTopLeftImage';
 import CustomButton from '../../components/CustomButton';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../../App';
 
-const Escolha = ({ navigation }: any) => {
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [dentistaImage, setDentistaImage] = useState(require('./../../assets/disabled-dentist.png'));
-  const [clienteImage, setClienteImage] = useState(require('./../../assets/disabled-client.png'));
+type EscolhaScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Escolha'>;
+
+interface EscolhaProps {
+  navigation: EscolhaScreenNavigationProp;
+}
+
+const Escolha = ({ navigation }: EscolhaProps) => {
+  const [selectedOption, setSelectedOption] = useState<'dentista' | 'cliente' | null>(null);
+  const [dentistaImage, setDentistaImage] = useState(require('../../assets/disabled-dentist.png'));
+  const [clienteImage, setClienteImage] = useState(require('../../assets/disabled-client.png'));
 
   const handleDentistaClick = () => {
     setSelectedOption('dentista');
-    setDentistaImage(require('./../../assets/actived-dentist.png'));
-    setClienteImage(require('./../../assets/disabled-client.png'));
+    setDentistaImage(require('../../assets/actived-dentist.png'));
+    setClienteImage(require('../../assets/disabled-client.png'));
   };
 
   const handleClienteClick = () => {
     setSelectedOption('cliente');
-    setClienteImage(require('./../../assets/actived-client.png'));
-    setDentistaImage(require('./../../assets/disabled-dentist.png'));
+    setClienteImage(require('../../assets/actived-client.png'));
+    setDentistaImage(require('../../assets/disabled-dentist.png'));
   };
 
   const handleContinue = () => {
@@ -27,11 +35,7 @@ const Escolha = ({ navigation }: any) => {
       return;
     }
 
-    if (selectedOption === 'dentista') {
-      navigation.navigate('PerfilDentista');
-    } else {
-      navigation.navigate('PerfilCliente');
-    }
+    navigation.navigate('Registro', { userType: selectedOption });
   };
 
   return (

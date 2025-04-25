@@ -5,10 +5,17 @@ import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import styled from 'styled-components/native';
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../firebaseConfig"
+import { auth, database } from "../../../firebaseConfig";
+import { ref, set } from "firebase/database";
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { RootStackParamList } from '../../../App';
 
+type RegistroScreenRouteProp = RouteProp<RootStackParamList, 'Registro'>;
 
 const Registro = ({ navigation }: any) => {
+  const route = useRoute<RegistroScreenRouteProp>();
+  const { userType } = route.params;
+  
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -21,33 +28,48 @@ const Registro = ({ navigation }: any) => {
   };
 
   const handleSubmit = () => {
+    if (nome.trim() === '') {
+      Alert.alert('Erro', 'Por favor, preencha o campo Nome.');
+      return;
+    } else if (!validateEmail(email)) {
+      Alert.alert('Erro', 'Por favor, insira um email válido.');
+      return;
+    } else if (senha.trim() === '') {
+      Alert.alert('Erro', 'Por favor, preencha o campo Senha.');
+      return;
+    } else if (confirmacaoSenha.trim() === '') {
+      Alert.alert('Erro', 'Por favor, preencha o campo Confirmação de Senha.');
+      return;
+    } else if (senha !== confirmacaoSenha) {
+      Alert.alert('Erro', 'As senhas não coincidem.');
+      return;
+    }
 
     createUserWithEmailAndPassword(auth, email, senha)
-      .then(() => {
-        Alert.alert("Sucesso", "Usuário registrado!");
-        navigation.navigate("Escolha");
+      .then((userCredential) => {
+        const user = userCredential.user;
+        const userRef = ref(database, 'users/' + user.uid);
+        
+        const tipoUsuario: 'dentista' | 'cliente' = userType === 'dentista' ? 'dentista' : 'cliente';
+        
+        set(userRef, {
+          nome: nome,
+          userType: tipoUsuario,
+          email: email
+        })
+        .then(() => {
+          Alert.alert("Sucesso", "Usuário registrado!");
+          
+          navigation.navigate(tipoUsuario === 'dentista' ? "PerfilDentista" : "PerfilCliente");
+        })
+        .catch((error) => {
+          Alert.alert("Erro", "Ocorreu um erro ao salvar os dados do usuário.");
+        });
       })
       .catch((error) => {
-        if (nome.trim() === '') {
-          Alert.alert('Erro', 'Por favor, preencha o campo Nome.');
-          return;
-        } else if (!validateEmail(email)) {
-          Alert.alert('Erro', 'Por favor, insira um email válido.');
-          return;
-        } else if (senha.trim() === '') {
-          Alert.alert('Erro', 'Por favor, preencha o campo Senha.');
-          return;
-        } else if (confirmacaoSenha.trim() === '') {
-          Alert.alert('Erro', 'Por favor, preencha o campo Confirmação de Senha.');
-          return;
-        } else if (senha !== confirmacaoSenha) {
-          Alert.alert('Erro', 'As senhas não coincidem.');
-          return;
-        } else {
-          Alert.alert("Erro", error.message);
-        }
+        Alert.alert("Erro", error.message);
       });
-   
+    
     setSenha('');
     setConfirmacaoSenha('');
   };

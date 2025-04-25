@@ -1,11 +1,12 @@
 import { initializeApp } from 'firebase/app';
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { getDatabase } from 'firebase/database';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-
 
 const firebaseConfig = {
     apiKey: "AIzaSyBAjuaGHoeeo8dEe8GqoNx1yogq_2LqU5M",
     authDomain: "toothfairy-5f8e1.firebaseapp.com",
+    databaseURL: "https://toothfairy-5f8e1-default-rtdb.firebaseio.com",
     projectId: "toothfairy-5f8e1",
     storageBucket: "toothfairy-5f8e1.firebasestorage.app",
     messagingSenderId: "536290616402",
@@ -15,10 +16,9 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });
 
-
-export { auth };
+const database = getDatabase(app);
+export { auth, database };
