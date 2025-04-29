@@ -50,17 +50,15 @@ const Registro = ({ navigation }: any) => {
         const user = userCredential.user;
         const userRef = ref(database, 'users/' + user.uid);
         
-        const tipoUsuario: 'dentista' | 'cliente' = userType === 'dentista' ? 'dentista' : 'cliente';
-        
         set(userRef, {
-          nome: nome,
-          userType: tipoUsuario,
-          email: email
+          nome: nome.trim(),
+          userType: userType,
+          email: email.trim().toLowerCase()
         })
         .then(() => {
           Alert.alert("Sucesso", "Usuário registrado!");
           
-          navigation.navigate(tipoUsuario === 'dentista' ? "PerfilDentista" : "PerfilCliente");
+          navigation.navigate(userType === 'dentista' ? "PerfilDentista" : "PerfilCliente");
         })
         .catch((error) => {
           Alert.alert("Erro", "Ocorreu um erro ao salvar os dados do usuário.");

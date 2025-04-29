@@ -1,19 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import DynamicTopLeftImage from '../../components/DynamicTopLeftImage';
+import { auth, database } from '../../../firebaseConfig';
+import { ref, get } from 'firebase/database';
 
 const PlanoCliente = () => {
+  const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userRef = ref(database, 'users/' + user.uid);
+        const snapshot = await get(userRef);
+        if (snapshot.exists()) {
+          setUserName(snapshot.val().nome);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
     <Container>
-        <DynamicTopLeftImage isLogo={false} />
-        <ProfileContainer>
-            <Image source={require('./../../assets/client-photo.png')} />
-            <Name>Peterson Santos da Silva</Name>
-        </ProfileContainer>
+      <DynamicTopLeftImage isLogo={false} />
+      <ProfileContainer>
+        <Image source={require('./../../assets/client-photo.png')} />
+        <Name>{userName || 'Carregando...'}</Name>
+      </ProfileContainer>
 
-        <BottomContainer>
-            <Carteirinha source={require('./../../assets/carteirinha.png')} />
-        </BottomContainer>
+      <BottomContainer>
+        <Carteirinha source={require('./../../assets/carteirinha.png')} />
+      </BottomContainer>
     </Container>
   );
 };

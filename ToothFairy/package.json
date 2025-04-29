@@ -28,7 +28,9 @@
     "react-native-safe-area-context": "^5.3.0",
     "react-native-svg": "^15.11.2",
     "react-navigation": "^5.0.0",
-    "styled-components": "^6.1.16"
+    "styled-components": "^6.1.16",
+    "react-native-web": "~0.19.13",
+    "@expo/metro-runtime": "~4.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

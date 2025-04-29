@@ -1,28 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import CustomButton from '../../components/CustomButton';
+import { auth, database } from '../../../firebaseConfig';
+import { ref, get } from 'firebase/database';
 
 const PerfilCliente = ({ navigation }: any) => {
+  const [userData, setUserData] = useState<{nome?: string}>({});
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userRef = ref(database, 'users/' + user.uid);
+        const snapshot = await get(userRef);
+        if (snapshot.exists()) {
+          setUserData(snapshot.val());
+        }
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
     <Container>
-        <ProfileContainer>
-            <Image source={require('./../../assets/client-photo.png')} />
-            <Name>Peterson Santos da Silva</Name>
-        </ProfileContainer>
+      <ProfileContainer>
+        <Image source={require('./../../assets/client-photo.png')} />
+        <Name>{userData.nome || 'Carregando...'}</Name>
+      </ProfileContainer>
 
-        <ButtonContainer>
-            <CustomButton 
-                title="Veja seu plano"
-                clientProfile={true}
-                hasQuizIcon={true}
-                onPress={() => navigation.navigate('PlanoCliente')}
-            />
-            <CustomButton 
-                title="Quiz"
-                clientProfile={true}
-                onPress={() => navigation.navigate('Quiz')}
-            />
-        </ButtonContainer>
+      <ButtonContainer>
+        <CustomButton 
+          title="Veja seu plano"
+          clientProfile={true}
+          hasQuizIcon={true}
+          onPress={() => navigation.navigate('PlanoCliente')}
+        />
+        <CustomButton 
+          title="Quiz"
+          clientProfile={true}
+          onPress={() => navigation.navigate('Quiz')}
+        />
+      </ButtonContainer>
     </Container>
   );
 };
