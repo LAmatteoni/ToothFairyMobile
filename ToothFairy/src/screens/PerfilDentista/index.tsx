@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, ScrollView, TextInput, View } from 'react-native';
+import { Alert, ScrollView, TextInput, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
 import DynamicTopLeftImage from '../../components/DynamicTopLeftImage';
 import CustomButton from '../../components/CustomButton';
@@ -14,6 +14,7 @@ const PerfilDentista = ({ navigation }: any) => {
   const [tratamento, setTratamento] = useState('');
   const [dataConsulta, setDataConsulta] = useState('');
   const [editandoPacienteId, setEditandoPacienteId] = useState<string | null>(null);
+  const [adviseExpanded, setAdviseExpanded] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -295,6 +296,14 @@ const PerfilDentista = ({ navigation }: any) => {
               </PacienteContainer>
             ))
           )}
+            <TouchableOpacity onPress={() => setAdviseExpanded(!adviseExpanded)}>
+              <Advise>
+                <Atention>Atenção: {adviseExpanded ? '▲' : '▼'}</Atention>
+                {adviseExpanded && (
+                  <AdviseText>O botão "Editar" permite o dentista criar e atualizar dados do paciente, como a última consulta, tratamento realizado e comentários.</AdviseText>
+                )}
+              </Advise>
+            </TouchableOpacity>
         </Section>
       </Container>
     </ScrollView>
@@ -320,6 +329,23 @@ const Name = styled.Text`
   font-weight: bold;
   text-align: center;
   margin-bottom: 30px;
+`;
+
+const Advise = styled.View`
+  margin-top: 16px;
+  flex-direction: column;
+`;
+
+const Atention = styled.Text`
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+`;
+
+const AdviseText = styled.Text`
+  color: white;
+  font-size: 12px;
+  flex: 1;
 `;
 
 const Section = styled.View`
