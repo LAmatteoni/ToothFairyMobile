@@ -1,61 +1,84 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import styled from 'styled-components/native';
 import CustomInput from '../../components/CustomInput';
 import DynamicTopLeftImage from '../../components/DynamicTopLeftImage';
 import CustomButton from '../../components/CustomButton';
-import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import { auth, database } from "../../../firebaseConfig";
-import { getDatabase, ref, get } from "firebase/database";
-
+import { ref, get } from 'firebase/database';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        redirectUser(user.uid);
+      }
+      setIsLoading(false);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  const redirectUser = async (userId: string) => {
+    try {
+      const userRef = ref(database, `users/${userId}`);
+      const snapshot = await get(userRef);
+      
+      if (snapshot.exists()) {
+        const userData = snapshot.val();
+        navigation.navigate(userData.userType === 'dentista' ? "PerfilDentista" : "PerfilCliente");
+      }
+    } catch (error) {
+      console.error("Erro ao redirecionar usuário:", error);
+    }
+  };
 
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   };
 
-  const handleSubmit = () => {
-    signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+  const handleSubmit = async () => {
+    if (!validateEmail(email)) {
+      Alert.alert('Erro', 'Email inválido.');
+      return;
+    }
+
+    if (password.trim() === '') {
+      Alert.alert('Erro', 'Por favor, preencha o campo Senha.');
+      return;
+    }
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      const dbRef = ref(database, 'users/' + user.uid);
       
-      get(dbRef).then((snapshot) => {
-        if (snapshot.exists()) {
-          const userData = snapshot.val();
-          Alert.alert("Sucesso", "Login realizado com sucesso!");
-          
-          if (userData.userType === 'dentista') {
-            navigation.navigate("PerfilDentista");
-          } else {
-            navigation.navigate("PerfilCliente");
-          }
-        } else {
-          Alert.alert("Erro", "Dados do usuário não encontrados.");
-        }
-      }).catch((error) => {
-        Alert.alert("Erro", "Não foi possível verificar o tipo de usuário.");
-      });
-    })
-      .catch((error) => {
-        if (!validateEmail(email)) {
-          Alert.alert('Erro', 'Email inválido.');
-          return;
-        } else if (password.trim() === '') {
-          Alert.alert('Erro', 'Por favor, preencha o campo Senha.');
-          return;
-        } else {
-          Alert.alert("Erro", "As credenciais estão incorretas");
-        }
-      });
-   
+      await AsyncStorage.setItem('userEmail', email);
+      
+      redirectUser(user.uid);
+      
+    } catch (error) {
+      Alert.alert("Erro", "As credenciais estão incorretas");
+    }
+    
+    setEmail('');
     setPassword('');
   };
+
+  if (isLoading) {
+    return (
+      <Container>
+        <LoadingText>Carregando...</LoadingText>
+      </Container>
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -67,7 +90,7 @@ const Login = ({ navigation }: any) => {
         <WelcomeText>Bem-vindo(a) de volta!</WelcomeText>
         <Image source={require('./../../assets/man_woman_hands.png')}/>
         <InstructionText>Entre com sua conta para continuar!</InstructionText>
-       
+        
         <InputContainer>
           <CustomInput
             type="email"
@@ -85,17 +108,22 @@ const Login = ({ navigation }: any) => {
             iconSource={require('./../../assets/password.png')}
           />
         </InputContainer>
-   
-        <RegisterText>É novo por aqui? Clique <Bold onPress={() => navigation.navigate('Escolha')}>AQUI</Bold> para criar uma nova conta</RegisterText>  
-       
-        <CustomButton
-          title="Continuar"
+
+        <RegisterText>É novo por aqui? Clique <Bold onPress={() => navigation.navigate('Escolha')}>AQUI</Bold> para criar uma nova conta</RegisterText>      
+        
+        <CustomButton 
+          title="Continuar" 
           onPress={handleSubmit}
         />
       </Container>
     </KeyboardAvoidingView>
   );
 };
+
+const LoadingText = styled.Text`
+  color: white;
+  font-size: 18px;
+`;
 
 const Container = styled.View`
   flex: 1;

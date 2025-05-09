@@ -8,7 +8,7 @@ const firebaseConfig = {
     authDomain: "toothfairy-5f8e1.firebaseapp.com",
     databaseURL: "https://toothfairy-5f8e1-default-rtdb.firebaseio.com",
     projectId: "toothfairy-5f8e1",
-    storageBucket: "toothfairy-5f8e1.firebasestorage.app",
+    storageBucket: "toothfairy-5f8e1.appspot.com",
     messagingSenderId: "536290616402",
     appId: "1:536290616402:web:6089e36667bf5d09aa6b8b",
     measurementId: "G-WXRSLSH6LK"
