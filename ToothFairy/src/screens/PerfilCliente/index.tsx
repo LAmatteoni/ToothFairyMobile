@@ -3,6 +3,7 @@ import styled from 'styled-components/native';
 import CustomButton from '../../components/CustomButton';
 import { auth, database } from '../../../firebaseConfig';
 import { ref, get } from 'firebase/database';
+import DynamicTopLeftImage from '../../components/DynamicTopLeftImage';
 
 const PerfilCliente = ({ navigation }: any) => {
   const [userData, setUserData] = useState<{nome?: string}>({});
@@ -24,6 +25,7 @@ const PerfilCliente = ({ navigation }: any) => {
 
   return (
     <Container>
+      <DynamicTopLeftImage isLogo={false} showLogout={true} />
       <ProfileContainer>
         <Image source={require('./../../assets/client-photo.png')} />
         <Name>{userData.nome || 'Carregando...'}</Name>

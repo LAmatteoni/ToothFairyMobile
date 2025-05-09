@@ -1,18 +1,47 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { useNavigation } from '@react-navigation/native';
-import BackIcon from './../../assets/back-arrow.png';
-import LogoIcon from './../../assets/odontoprev-logo.png';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../../firebaseConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const DynamicTopLeftImage = ({ isLogo = false }) => {
+interface DynamicTopLeftImageProps {
+  isLogo?: boolean;
+  showLogout?: boolean;
+}
+
+const DynamicTopLeftImage = ({ isLogo = false, showLogout = false }: DynamicTopLeftImageProps) => {
   const navigation = useNavigation();
+
+  const handlePress = async () => {
+    if (showLogout) {
+      try {
+        await signOut(auth);
+        await AsyncStorage.removeItem('userEmail');
+        navigation.navigate('Login');
+      } catch (error) {
+        console.error("Erro ao fazer logout:", error);
+      }
+    } else if (!isLogo) {
+      navigation.goBack();
+    }
+  };
 
   return (
     <BackButtonContainer 
-      onPress={isLogo ? undefined : () => navigation.goBack()}
-      disabled={isLogo}
+      onPress={handlePress}
+      disabled={isLogo && !showLogout}
     >
-      <BackImage source={isLogo ? LogoIcon : BackIcon} isLogo={isLogo} />
+      <BackImage 
+        source={
+          isLogo 
+            ? require('./../../assets/odontoprev-logo.png')
+            : showLogout
+              ? require('./../../assets/logout.png')
+              : require('./../../assets/back-arrow.png')
+        } 
+        isLogo={isLogo}
+      />
     </BackButtonContainer>
   );
 };
@@ -21,11 +50,12 @@ const BackButtonContainer = styled.TouchableOpacity`
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 10;
 `;
 
-const BackImage = styled.Image`
-  width: ${({ isLogo }: any) => (isLogo ? '140px' : '24px')};
-  height: ${({ isLogo }: any) => (isLogo ? '50px' : '24px')};
+const BackImage = styled.Image<{ isLogo: boolean }>`
+  width: ${({ isLogo }) => (isLogo ? '140px' : '24px')};
+  height: ${({ isLogo }) => (isLogo ? '50px' : '24px')};
   margin-left: ${({ isLogo }: any) => (isLogo ? 0 : 20)}px;
   margin-top: ${({ isLogo }: any) => (isLogo ? 0 : 10)}px;
   resize-mode: contain;

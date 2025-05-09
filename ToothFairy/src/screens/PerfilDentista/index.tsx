@@ -196,7 +196,7 @@ const PerfilDentista = ({ navigation }: any) => {
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: '#0066ff' }}>
       <Container>
-        <DynamicTopLeftImage isLogo={false} />
+        <DynamicTopLeftImage isLogo={false} showLogout={true} />
         <Image source={require('./../../assets/dentist-photo.png')} />
         <Name>{dentistName}</Name>
         
@@ -217,6 +217,15 @@ const PerfilDentista = ({ navigation }: any) => {
 
         <Section>
           <SectionTitle>Meus Pacientes</SectionTitle>
+          
+            <TouchableOpacity onPress={() => setAdviseExpanded(!adviseExpanded)}>
+              <Advise>
+                <Atention>Atenção: {adviseExpanded ? '▲' : '▼'}</Atention>
+                {adviseExpanded && (
+                  <AdviseText>O botão "Editar" permite o dentista criar e atualizar dados do paciente, como a última consulta, tratamento realizado e comentários.</AdviseText>
+                )}
+              </Advise>
+            </TouchableOpacity>
           
           {pacientes.length === 0 ? (
             <EmptyText>Nenhum paciente cadastrado</EmptyText>
@@ -296,14 +305,6 @@ const PerfilDentista = ({ navigation }: any) => {
               </PacienteContainer>
             ))
           )}
-            <TouchableOpacity onPress={() => setAdviseExpanded(!adviseExpanded)}>
-              <Advise>
-                <Atention>Atenção: {adviseExpanded ? '▲' : '▼'}</Atention>
-                {adviseExpanded && (
-                  <AdviseText>O botão "Editar" permite o dentista criar e atualizar dados do paciente, como a última consulta, tratamento realizado e comentários.</AdviseText>
-                )}
-              </Advise>
-            </TouchableOpacity>
         </Section>
       </Container>
     </ScrollView>
@@ -332,7 +333,7 @@ const Name = styled.Text`
 `;
 
 const Advise = styled.View`
-  margin-top: 16px;
+  margin-bottom: 20px;
   flex-direction: column;
 `;
 
@@ -359,7 +360,7 @@ const SectionTitle = styled.Text`
   color: white;
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
 `;
 
 const Input = styled.TextInput`
