@@ -80,7 +80,6 @@ const Registro = ({ navigation }: any) => {
       <Container>
         <DynamicTopLeftImage isLogo={false} />
         <RegisterText>Cadastre-se</RegisterText>
-        <Image source={require('./../../assets/choice-user-profile.png')} />
         <AccountInfoText>Informações da conta</AccountInfoText>
 
         <InputContainer>
